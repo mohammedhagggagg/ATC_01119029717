@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventBooking.ApI.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+   
+    public class WeatherForecastController : BaseAPIControllercs
     {
         private static readonly string[] Summaries = new[]
         {

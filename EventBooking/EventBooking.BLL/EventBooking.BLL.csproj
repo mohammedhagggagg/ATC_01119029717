@@ -10,4 +10,8 @@
     <ProjectReference Include="..\EventBooking.DAL\EventBooking.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services.Contract\" />
+  </ItemGroup>
+
 </Project>
