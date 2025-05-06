@@ -96,6 +96,7 @@ namespace EventBooking.ApI
             //});
             var app = builder.Build();
 
+            //Seed Roles and Admin User
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -129,6 +130,19 @@ namespace EventBooking.ApI
                     {
                         await userManager.AddToRoleAsync(adminUser, SD.AdminRole);
                     }
+                }
+            }
+            // Seed Categories
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<EventBookingDbContext>();
+                if (!context.Categories.Any())
+                {
+                    context.Categories.AddRange(
+                        new Category { Name = "Conferences", Description = "Conference events", Photo = "http://example.com/photo.jpg" },
+                        new Category { Name = "Workshops", Description = "Workshop events", Photo = "http://example.com/photo2.jpg" }
+                    );
+                    context.SaveChanges();
                 }
             }
 
