@@ -1,0 +1,6 @@
+@EventBooking.ApI_HostAddress = http://localhost:5186
+
+GET {{EventBooking.ApI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
