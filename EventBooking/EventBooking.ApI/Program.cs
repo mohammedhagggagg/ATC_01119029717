@@ -1,4 +1,5 @@
 
+using EventBooking.ApI.Helper;
 using EventBooking.BLL.Repositories;
 using EventBooking.BLL.Repositories.Contract;
 using EventBooking.DAL.Data;
@@ -95,7 +96,8 @@ namespace EventBooking.ApI
             //    };
             //});
             var app = builder.Build();
-
+            //HandlerPhotos is a static class that handles the photo upload and storage
+            HandlerPhotos.Initialize(app.Services.GetRequiredService<IWebHostEnvironment>());
             //Seed Roles and Admin User
             using (var scope = app.Services.CreateScope())
             {
@@ -156,6 +158,8 @@ namespace EventBooking.ApI
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventBooking v1"));
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
 
             app.UseAuthorization();

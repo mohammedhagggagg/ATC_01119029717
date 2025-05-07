@@ -22,7 +22,7 @@ namespace EventBooking.BLL.Repositories
         }
         public async Task<T> GetByIdAsync(int id)
         {
-            var result = await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            var result = await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id && EF.Property<bool>(e, "IsDeleted") == false);
             return result;
         }
         public async Task<T?> GetByIdWithIncludeAsync(int id, string includeProperties)
