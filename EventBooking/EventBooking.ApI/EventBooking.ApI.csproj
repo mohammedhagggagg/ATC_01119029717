@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventBooking.BLL\EventBooking.BLL.csproj" />
+    <ProjectReference Include="..\EventBooking.DAL\EventBooking.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,8 +8,9 @@ namespace EventBooking.DAL.Models
 {
     public class Booking :BaseEntity
     {
-        //public DateTime BookingDate { get; set; }
-
+        public DateTime BookingDate { get; set; }
+        public int NumberOfTickets { get; set; }
+        public decimal TotalPrice { get; set; }
         public string UserId { get; set; }
         public AppUser User { get; set; }
 

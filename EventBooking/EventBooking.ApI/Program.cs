@@ -1,4 +1,5 @@
 
+using EventBooking.ApI.Extentions;
 using EventBooking.ApI.Helper;
 using EventBooking.BLL.Repositories;
 using EventBooking.BLL.Repositories.Contract;
@@ -69,11 +70,22 @@ namespace EventBooking.ApI
             builder.Services.AddDbContext<EventBookingDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            //Add Identity
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<EventBookingDbContext>()
-                            .AddDefaultTokenProviders();
+            // Add Identity and JWT Authentication
+            //Using Static class to add Identity services
+            builder.Services.AddIdentityServices(builder.Configuration);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        //builder.WithOrigins("https://localhost:7295", "http://localhost:4200")
+                        builder.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                            
+                    });
+            });
             //Register generic repository
             builder.Services.AddScoped(typeof( IGenericRepository<>),typeof(GenericRepository<>));
 
@@ -160,8 +172,8 @@ namespace EventBooking.ApI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
-
             app.UseAuthorization();
 
 

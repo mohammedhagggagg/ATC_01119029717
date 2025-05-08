@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventBooking.DAL\EventBooking.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services.Contract\" />
+    <ProjectReference Include="..\EventBooking.Services\EventBooking.Services.csproj" />
   </ItemGroup>
 
 </Project>

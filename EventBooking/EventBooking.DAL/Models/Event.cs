@@ -14,6 +14,7 @@ namespace EventBooking.DAL.Models
         public DateTime Date { get; set; }
         public string Venue { get; set; }
         public decimal Price { get; set; }
+        public int AvailableTickets { get; set; }= 20; // default value
         public string ImageUrl { get; set; }
 
         // Foreign key
