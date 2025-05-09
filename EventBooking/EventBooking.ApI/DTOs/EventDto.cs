@@ -13,7 +13,8 @@ namespace EventBooking.ApI.DTOs
         public string Venue { get; set; }
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         public decimal Price { get; set; }
-        public string ImageUrl { get; set; }
+        public List<EventPhotoDto>? Photos { get; set; } = new List<EventPhotoDto>();
+        //public List<string>? ImageUrls { get; set; } = new List<string>();
         [Required(ErrorMessage = "Please select a category.")]
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }

@@ -4,6 +4,7 @@ using EventBooking.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventBooking.DAL.Data.Migrations
 {
     [DbContext(typeof(EventBookingDbContext))]
-    partial class EventBookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250509023503_Add EventPhotos")]
+    partial class AddEventPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,7 +328,7 @@ namespace EventBooking.DAL.Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventPhotos");
+                    b.ToTable("EventPhoto");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

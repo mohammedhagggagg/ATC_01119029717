@@ -15,12 +15,12 @@ namespace EventBooking.DAL.Models
         public string Venue { get; set; }
         public decimal Price { get; set; }
         public int AvailableTickets { get; set; }= 20; // default value
-        public string ImageUrl { get; set; }
 
         // Foreign key
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
         public virtual ICollection<Booking>? Bookings { get; set; }
+        public List<EventPhoto> EventPhotos { get; set; } = new List<EventPhoto>(); 
     }
 }

@@ -22,6 +22,7 @@ namespace EventBooking.DAL.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<EventPhoto> EventPhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
