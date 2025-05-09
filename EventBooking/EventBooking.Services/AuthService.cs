@@ -30,9 +30,13 @@ namespace EventBooking.Services
                 //new Claim(ClaimTypes.GivenName, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
+                //new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
 
             };
+            if (!string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                authClaims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
+            }
 
             //get role
             foreach (var itemRole in roles)
@@ -41,11 +45,12 @@ namespace EventBooking.Services
             }
 
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-
+            var expiration = DateTime.UtcNow.AddDays(double.Parse(_configuration["JWT:TokenExpirationInDay"]));
+            Console.WriteLine($"Token expiration: {expiration}");
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:Issuer"],
                 audience: _configuration["JWT:Audience"],
-                expires: DateTime.UtcNow.AddDays(double.Parse(_configuration["JWT:TokenExpirationInDay"])),
+                expires: expiration,
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256)
             );

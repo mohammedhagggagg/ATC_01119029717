@@ -1,12 +1,14 @@
 ﻿using EventBooking.ApI.DTOs;
 using EventBooking.BLL.Repositories.Contract;
 using EventBooking.DAL.Models;
+using EventBooking.DAL.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventBooking.ApI.Controllers
 {
-  
+    [Authorize(Roles = SD.CustomerRole)]
     public class BookingController : BaseAPIControllercs
     {
         private readonly IGenericRepository<Booking> bookingRepository;

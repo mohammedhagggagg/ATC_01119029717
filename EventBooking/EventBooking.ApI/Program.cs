@@ -122,7 +122,15 @@ namespace EventBooking.ApI
                 {
                     if (!await roleManager.RoleExistsAsync(role))
                     {
-                        await roleManager.CreateAsync(new IdentityRole(role));
+                        var roleResult = await roleManager.CreateAsync(new IdentityRole(role));
+                        if (!roleResult.Succeeded)
+                        {
+                            Console.WriteLine($"Failed to create role {role}: {string.Join(", ", roleResult.Errors)}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Role {role} created successfully");
+                        }
                     }
                 }
 
@@ -134,6 +142,7 @@ namespace EventBooking.ApI
                     DisplayName = "Admin",
                     IsActive = true,
                     EmailConfirmed = true,
+                    PhoneNumber="0109090909",
 
                 };
                 string adminPassword = "Admin@123";
@@ -142,8 +151,24 @@ namespace EventBooking.ApI
                     var result = await userManager.CreateAsync(adminUser, adminPassword);
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(adminUser, SD.AdminRole);
+                        var roleAssignResult = await userManager.AddToRoleAsync(adminUser, SD.AdminRole);
+                        if (!roleAssignResult.Succeeded)
+                        {
+                            Console.WriteLine($"Failed to assign Admin role: {string.Join(", ", roleAssignResult.Errors)}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Admin role assigned successfully");
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine($"Failed to create admin: {string.Join(", ", result.Errors)}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Admin user already exists");
                 }
             }
             // Seed Categories

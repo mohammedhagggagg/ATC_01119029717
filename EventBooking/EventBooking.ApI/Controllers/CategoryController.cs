@@ -1,13 +1,16 @@
-﻿using EventBooking.ApI.DTOs;
+﻿using System.Security.Claims;
+using EventBooking.ApI.DTOs;
 using EventBooking.ApI.Helper;
 using EventBooking.BLL.Repositories.Contract;
 using EventBooking.DAL.Models;
+using EventBooking.DAL.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventBooking.ApI.Controllers
 {
-    
+    [Authorize(Roles = SD.AdminRole)]
     public class CategoryController : BaseAPIControllercs
     {
         private readonly IGenericRepository<Category> categoryRepository;
@@ -18,6 +21,7 @@ namespace EventBooking.ApI.Controllers
         [HttpGet("GetAllCategories")]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAllCategories()
         {
+            
             var categories = await categoryRepository.GetAllAsync();
             var categoriesDtos = categories.Select(c => new CategoryDto
             {
@@ -49,6 +53,8 @@ namespace EventBooking.ApI.Controllers
         [HttpPost("CreateCategory")]
         public async Task<ActionResult<CategoryDto>> CreateCategory([FromForm] CategoryDto categoryDto)
         {
+            var userid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Console.WriteLine($"userid = { userid}");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
