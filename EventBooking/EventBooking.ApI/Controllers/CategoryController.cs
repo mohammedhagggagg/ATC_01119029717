@@ -18,6 +18,7 @@ namespace EventBooking.ApI.Controllers
         {
             this.categoryRepository = categoryRepository;
         }
+        [AllowAnonymous]
         [HttpGet("GetAllCategories")]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAllCategories()
         {
@@ -33,6 +34,7 @@ namespace EventBooking.ApI.Controllers
 
             return Ok(categoriesDtos);
         }
+        [AllowAnonymous]
         [HttpGet("GetCategoryById/{id}")]
         public async Task<ActionResult<CategoryDto>> GetCategoryById(int id)
         {

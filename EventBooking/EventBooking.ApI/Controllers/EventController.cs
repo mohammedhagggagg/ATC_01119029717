@@ -14,18 +14,20 @@ namespace EventBooking.ApI.Controllers
     [Authorize(Roles =SD.AdminRole)]
     public class EventController : BaseAPIControllercs
     {
+        private readonly IEventRepository eventRepo;
         private readonly IGenericRepository<Event> eventRepository;
         private readonly IGenericRepository<Category> categoryRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
 
-        public EventController(IGenericRepository<Event> eventRepository, IGenericRepository<Category> categoryRepository , IWebHostEnvironment webHostEnvironment)
+        public EventController(IEventRepository _eventRepo,IGenericRepository<Event> eventRepository, IGenericRepository<Category> categoryRepository , IWebHostEnvironment webHostEnvironment)
         {
+            eventRepo = _eventRepo;
             this.eventRepository = eventRepository;
             this.categoryRepository = categoryRepository;
             this.webHostEnvironment = webHostEnvironment;
             HandlerPhotos.Initialize(webHostEnvironment);
         }
-
+        [AllowAnonymous]
         [HttpGet("GetAllEvents")]
         public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
         {
@@ -51,6 +53,62 @@ namespace EventBooking.ApI.Controllers
             });
             return Ok(eventDtos);
         }
+        [AllowAnonymous]
+        [HttpGet("GetAllWithFilter")]
+        public async Task<IActionResult> GetAllWithFilter(int pageSize, int pageIndex, int? categoryId, decimal? maxPrice, decimal? minPrice, DateTime? startDate, DateTime? endDate)
+        {
+            if (pageSize <= 0 || pageIndex <= 0)
+                return BadRequest("Invalid pagination parameters. Both pageSize and pageIndex must be greater than 0.");
+            if (categoryId.HasValue && categoryId <= 0)
+                return BadRequest("Invalid category ID. The category ID must be greater than 0.");
+            if (maxPrice.HasValue && maxPrice <= 0)
+                return BadRequest("Invalid max price. The max price must be greater than 0.");
+            if (minPrice.HasValue && minPrice <= 0)
+                return BadRequest("Invalid min price. The min price must be greater than 0.");
+            if (minPrice.HasValue && maxPrice.HasValue && minPrice > maxPrice)
+                return BadRequest("Invalid price range. The min price must be less than or equal to the max price.");
+            if (startDate.HasValue && endDate.HasValue && startDate > endDate)
+                return BadRequest("Invalid date range. The start date must be less than or equal to the end date.");
+
+            var totalCount = await eventRepo.GetFilteredEventsCount(categoryId, maxPrice, minPrice, startDate, endDate);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var events = await eventRepo.GetEventsWithFilters(pageSize, pageIndex, categoryId, maxPrice, minPrice, startDate, endDate);
+            if (events == null || !events.Any())
+                return NotFound(new { message = "No events found." });
+
+            var allEvents = events.Select(e => new
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Tags = e.Tags,
+                Date = e.Date,
+                Venue = e.Venue,
+                Price = e.Price,
+                AvailableTickets = e.AvailableTickets,
+                Category = new
+                {
+                    Id = e.Category.Id,
+                    Name = e.Category.Name,
+                    Description = e.Category.Description,
+                    Photo = e.Category.Photo
+                },
+                Photos = e.EventPhotos.Select(ep => new
+                {
+                    Id = ep.Id,
+                    Url = $"{Request.Scheme}://{Request.Host}{ep.PhotoLink}"
+                }).ToList()
+            });
+
+            return Ok(new
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                Events = allEvents
+            });
+        }
+        [AllowAnonymous]
         [HttpGet("GetEventById/{id}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
@@ -78,6 +136,7 @@ namespace EventBooking.ApI.Controllers
             };
             return Ok(eventDto);
         }
+
         [HttpPost("CreateEvent")]
         public async Task<ActionResult<Event>> CreateEvent([FromForm] EventCreateDto eventDto)
             {
@@ -282,6 +341,27 @@ namespace EventBooking.ApI.Controllers
             await eventRepository.SaveChangesAsync();
             return NoContent();
         }
+        [HttpPut("RestoreEvent/{id}")]
+       public async Task<IActionResult> RestoreEvent(int id)
+        {
+            var eventItem =await eventRepo.GetByIdIncludingDeletedAsync(id);
+            if (eventItem == null )
+            {
+                return NotFound("Event not found or not deleted");
+            }
+            if (!eventItem.IsDeleted)
+            {
+                return BadRequest("Event is not deleted");
+            }
+            eventItem.IsDeleted = false;
+            await eventRepository.UpdateAsync(eventItem);
+            await eventRepository.SaveChangesAsync();
+            return Ok(new
+            {
+                Message = "Event Restored Successfully"
+              
+            });
+       }
 
     }
 }

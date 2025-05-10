@@ -1,4 +1,5 @@
-﻿using EventBooking.ApI.DTOs;
+﻿using System.Security.Claims;
+using EventBooking.ApI.DTOs;
 using EventBooking.BLL.Repositories.Contract;
 using EventBooking.DAL.Models;
 using EventBooking.DAL.Utilities;
@@ -23,7 +24,12 @@ namespace EventBooking.ApI.Controllers
         [HttpGet("GetAllBookings")]
         public async Task<ActionResult<IEnumerable<BookingDto>>> GetAllBookings()
         {
-            var bookings = await bookingRepository.GetAllAsync();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated");
+            }
+            var bookings = await bookingRepository.GetAllAsync(b => b.UserId ==userId);
             if (bookings == null || !bookings.Any())
             {
                 return NotFound("No bookings found");
@@ -42,10 +48,15 @@ namespace EventBooking.ApI.Controllers
         [HttpGet("GetBookingById/{id}")]
         public async Task<ActionResult<BookingDto>> GetBookingById(int id)
         {
-            var booking = await bookingRepository.GetByIdAsync(id);
-            if (booking == null )
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
             {
-                return NotFound("Booking not found");
+                return Unauthorized("User not authenticated");
+            }
+            var booking = await bookingRepository.GetByIdAsync(id);
+            if (booking == null ||booking.UserId != userId)
+            {
+                return NotFound("Booking not found or not authorized");
             }
             var bookingDto = new BookingDto
             {
@@ -65,6 +76,11 @@ namespace EventBooking.ApI.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated");
+            }
             var eventToBook = await eventRepository.GetByIdAsync(bookingDto.EventId);
             if (eventToBook == null || eventToBook.IsDeleted)
             {
@@ -77,7 +93,7 @@ namespace EventBooking.ApI.Controllers
             var booking = new Booking
             {
                 EventId = bookingDto.EventId,
-                UserId = bookingDto.UserId,
+                UserId = userId,
                 BookingDate = DateTime.UtcNow,
                 NumberOfTickets = bookingDto.NumberOfTickets,
                 TotalPrice = eventToBook.Price * bookingDto.NumberOfTickets,
@@ -90,7 +106,7 @@ namespace EventBooking.ApI.Controllers
             {
                 Id = booking.Id,
                 EventId = booking.EventId,
-                UserId = booking.UserId,
+                UserId = userId,
                 BookingDate = booking.BookingDate,
                 NumberOfTickets = booking.NumberOfTickets,
                 TotalPrice = booking.TotalPrice
@@ -115,15 +131,20 @@ namespace EventBooking.ApI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var booking = await bookingRepository.GetByIdAsync(id);
-            if (booking == null)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
             {
-                return NotFound("Booking not found");
+                return Unauthorized("User not authenticated");
+            }
+            var booking = await bookingRepository.GetByIdAsync(id);
+            if (booking == null || booking.UserId != userId)
+            {
+                return NotFound("Booking not found or not authorized");
             }
             var eventToBook = await eventRepository.GetByIdAsync(booking.EventId);
-            if (eventToBook == null || eventToBook.IsDeleted)
+            if (eventToBook == null || eventToBook.IsDeleted || booking.UserId !=userId)
             {
-                return NotFound("Event not found");
+                return NotFound("Event not found or not authorized");
             }
             if (eventToBook.AvailableTickets + booking.NumberOfTickets < bookingDto.NumberOfTickets)
             {
@@ -150,15 +171,20 @@ namespace EventBooking.ApI.Controllers
         [HttpDelete("DeleteBooking/{id}")]
         public async Task<IActionResult>  DeleteBooking(int id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not authenticated");
+            }
             var booking = await bookingRepository.GetByIdAsync(id);
             if (booking == null)
             {
                 return NotFound("Booking not found");
             }
             var eventToBook = await eventRepository.GetByIdAsync(booking.EventId);
-            if (eventToBook == null || eventToBook.IsDeleted)
+            if (eventToBook == null || eventToBook.IsDeleted || booking.UserId != userId)
             {
-                return NotFound("Event not found");
+                return NotFound("Event not found or not authorized");
             }
             eventToBook.AvailableTickets += booking.NumberOfTickets;
             await eventRepository.UpdateAsync(eventToBook);

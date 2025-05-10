@@ -89,6 +89,7 @@ namespace EventBooking.ApI
             });
             //Register generic repository
             builder.Services.AddScoped(typeof( IGenericRepository<>),typeof(GenericRepository<>));
+            builder.Services.AddScoped<IEventRepository, EventRepository>();
 
             //builder.Services.AddAuthentication(options =>
             //{
