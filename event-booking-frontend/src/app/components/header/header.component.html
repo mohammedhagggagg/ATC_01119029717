@@ -1,0 +1,40 @@
+
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo">EventBooking</div>
+      <div class="nav-links">
+        <a routerLink="/home" routerLinkActive="active">Home</a>
+        <a routerLink="/events" routerLinkActive="active">Events</a>
+        <a routerLink="/categories" routerLinkActive="active">Categories</a>
+        <a routerLink="/bookings" routerLinkActive="active">Bookings</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-actions">
+        <a *ngIf="!isLoggedIn" routerLink="/login">Login</a>
+        <a *ngIf="!isLoggedIn" routerLink="/register">Register</a>
+        <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+      </div>
+      <!-- <div class="user-dropdown">
+        <i class="fas fa-user" (click)="toggleDropdown()"></i>
+        <div class="dropdown-menu" [ngClass]="{'show': showDropdown}">
+          <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+            <a routerLink="/profile">Profile</a>
+            <a (click)="logout()">Logout</a>
+          </ng-container>
+          <ng-template #notLoggedIn>
+            <a routerLink="/login">Login</a>
+            <a routerLink="/register">Register</a>
+          </ng-template>
+        </div>
+      </div> -->
+      <div class="nav-icons">
+        <div class="cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="badge">0</span>
+        </div>
+        <i class="fas fa-star" style="color: #ffa500;"></i>
+        <i class="fas mode-toggle" [ngClass]="darkMode ? 'fa-sun' : 'fa-moon'" (click)="toggleDarkMode()"></i>
+      </div>
+    </div>
+  </nav>
