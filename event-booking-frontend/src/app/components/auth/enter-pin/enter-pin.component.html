@@ -1,0 +1,65 @@
+<section class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold">
+              Verify <span class="text-primary">PIN Code</span>
+            </h2>
+          </div>
+  
+          <div *ngIf="errorMessage" class="alert alert-danger text-center">
+            {{ errorMessage }}
+          </div>
+  
+          <form [formGroup]="verifyPinCodeForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="pin" class="form-label">
+                Pin Code will expire at {{ expireAt }}
+              </label>
+              <input
+                id="pin"
+                name="pin"
+                class="form-control"
+                formControlName="pin"
+                placeholder="Enter your pin code"
+                [ngClass]="{
+                  'is-invalid': f['pin'].invalid && f['pin'].touched
+                }"
+              />
+              <div class="invalid-feedback" *ngIf="f['pin'].touched">
+                <div *ngIf="f['pin'].errors?.['required']">
+                  Pin Code is required.
+                </div>
+                <div *ngIf="f['pin'].errors?.['minlength']">
+                  Pin Code must be 6 characters.
+                </div>
+                <div *ngIf="f['pin'].errors?.['maxlength']">
+                  Pin Code must be 6 characters.
+                </div>
+              </div>
+            </div>
+  
+            <div class="d-grid gap-2 mb-3">
+              <button type="submit" class="btn btn-primary">
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                <span *ngIf="!isLoading">Verify Pin Code</span>
+              </button>
+            </div>
+  
+            <div class="text-center">
+              <a
+                (click)="ResndCode()"
+                class="text-decoration-none  pointer"
+              >
+                Resend Code
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
