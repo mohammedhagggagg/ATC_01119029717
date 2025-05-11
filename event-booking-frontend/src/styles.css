@@ -1,5 +1,276 @@
 /* You can add global styles to this file, and also import other style files */
 body.dark-mode {
+    background-color: #333 !important;
+    color: #fff !important;
+  }
+  
+  /* الـ Navbar */
+  body.dark-mode .navbar {
+    background-color: #444 !important;
+  }
+  
+  body.dark-mode .nav-links a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .nav-links a.active {
+    background-color: #ff6f61 !important;
+    color: #f0f0f0 !important;
+    padding: 3px 10px !important;
+    border-radius: 5px !important;
+  }
+  
+  body.dark-mode .nav-actions a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .nav-actions a:hover {
+    color: #ff6f61 !important;
+  }
+  
+  body.dark-mode .nav-actions a.active {
+    background-color: #ff6f61 !important;
+    color: #f0f0f0 !important;
+    padding: 3px 10px !important;
+    border-radius: 5px !important;
+  }
+  
+  body.dark-mode .nav-icons i {
+    color: #fff !important;
+  }
+  
+  body.dark-mode h1,
+  body.dark-mode h2,
+  body.dark-mode h3,
+  body.dark-mode p {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .container {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode div {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .hero-section {
+    background-color: #666 !important;
+  }
+  
+  body.dark-mode .options button {
+    background-color: #555 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .search-bar input {
+    background-color: #444 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .find-btn {
+    background-color: #ff6f61 !important;
+  }
+  
+  body.dark-mode .dropdown-menu {
+    background-color: #555 !important;
+  }
+  
+  body.dark-mode .dropdown-menu a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .dropdown-menu a:hover {
+    background-color: #666 !important;
+  }
+
+/* body.dark-mode {
+    background-color: #333 !important;
+    color: #fff !important;
+  }
+  
+
+  body.dark-mode .navbar {
+    background-color: #444 !important;
+  }
+  
+  body.dark-mode .nav-links a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .nav-links a.active {
+    background-color: #ff6f61 !important;
+    color: #f0f0f0 !important;
+    padding: 3px 10px !important;
+    border-radius: 5px !important;
+  }
+  
+  body.dark-mode .nav-actions a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .nav-actions a:hover {
+    color: #ff6f61 !important;
+  }
+  
+  body.dark-mode .nav-actions a.active {
+    background-color: #ff6f61 !important;
+    color: #f0f0f0 !important;
+    padding: 3px 10px !important;
+    border-radius: 5px !important;
+  }
+  
+  body.dark-mode .nav-icons i {
+    color: #fff !important;
+  }
+  
+  body.dark-mode h1,
+  body.dark-mode h2,
+  body.dark-mode h3,
+  body.dark-mode p {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .container {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode div {
+    background-color: transparent !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .hero-section {
+    background-color: #666 !important;
+  }
+  
+  body.dark-mode .options button {
+    background-color: #555 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .search-bar input {
+    background-color: #444 !important;
+    color: #fff !important;
+  }
+  
+  body.dark-mode .find-btn {
+    background-color: #ff6f61 !important;
+  }
+  
+  body.dark-mode .dropdown-menu {
+    background-color: #555 !important;
+  }
+  
+  body.dark-mode .dropdown-menu a {
+    color: #fff !important;
+  }
+  
+  body.dark-mode .dropdown-menu a:hover {
+    background-color: #666 !important;
+  } */
+
+
+
+
+
+
+
+
+
+/* body.dark-mode {
+    background-color: #333;
+    color: #fff;
+  }
+  
+
+  body.dark-mode .navbar {
+    background-color: #444;
+  }
+  
+  body.dark-mode .nav-links a {
+    color: #fff;
+  }
+
+  body.dark-mode .nav-links a.active {
+    background-color: #ff6f61;
+    color: #f0f0f0 !important;
+    padding: 3px 10px;
+    border-radius: 5px;
+  }
+  
+  body.dark-mode .nav-actions a {
+    color: #fff;
+  }
+  
+  body.dark-mode .nav-actions a:hover {
+    color: #ff6f61;
+  }
+  body.dark-mode .nav-actions a.active {
+    background-color: #ff6f61;
+    color: #f0f0f0 !important;
+    padding: 3px 10px;
+    border-radius: 5px;
+  }
+  body.dark-mode .nav-icons i {
+    color: #fff;
+  }
+  
+
+  body.dark-mode h1,
+  body.dark-mode h2,
+  body.dark-mode h3,
+  body.dark-mode p {
+    color: #fff;
+  }
+
+
+  body.dark-mode .container {
+    background-color: transparent; 
+    color: #fff;
+  }
+  
+  body.dark-mode div {
+   
+    background-color: transparent;
+    color: #fff;
+  }
+  body.dark-mode .hero-section {
+    background-color: #666;
+  }
+  
+  body.dark-mode .options button {
+    background-color: #555;
+    color: #fff;
+  }
+  
+  body.dark-mode .search-bar input {
+    background-color: #444;
+    color: #fff;
+  }
+  
+  body.dark-mode .find-btn {
+    background-color: #ff6f61;
+  }
+
+  body.dark-mode .dropdown-menu {
+    background-color: #555;
+  }
+  
+  body.dark-mode .dropdown-menu a {
+    color: #fff;
+  }
+  
+  body.dark-mode .dropdown-menu a:hover {
+    background-color: #666;
+  } */
+
+
+
+/* body.dark-mode {
     background-color: #333;
     color: #fff;
     
@@ -19,4 +290,4 @@ body.dark-mode {
   
   body.dark-mode .nav-icons i {
     color: #fff;
-  }
+  } */

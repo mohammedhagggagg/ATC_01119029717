@@ -11,9 +11,9 @@
     </div>
     <div class="nav-right">
       <div class="nav-actions">
-        <a *ngIf="!isLoggedIn" routerLink="/login">Login</a>
-        <a *ngIf="!isLoggedIn" routerLink="/register">Register</a>
-        <a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+        <a *ngIf="!isLogin" routerLink="/login" routerLinkActive="active">Login</a>
+        <a *ngIf="!isLogin" routerLink="/register">Register</a>
+        <a *ngIf="isLogin" (click)="logout()">Logout</a>
       </div>
       <!-- <div class="user-dropdown">
         <i class="fas fa-user" (click)="toggleDropdown()"></i>
