@@ -1,0 +1,87 @@
+
+<section class="py-5 bg-light">
+    <div class="container">
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="!loading && error" class="text-center text-danger">
+        {{ error }}
+      </div>
+      <div class="row" *ngIf="!loading && !error && event">
+        <div class="col-md-6">
+          <div class="border-0 rounded-lg shadow-lg p-4 bg-white event-image-card">
+            <div class="image-container position-relative">
+              <img
+                [src]="imageBaseUrl + (selectedPhotoUrl ? selectedPhotoUrl : event.Photos?.[0]?.Url || event.photos?.[0]?.url)"
+                class="img-fluid rounded-lg w-100 transition-transform"
+                style="max-height: 450px; object-fit: contain; background-color: #f8f9fa;"
+                alt=" pla ceholder"
+                *ngIf="event.Photos?.length || event.photos?.length"
+                (contextmenu)="onRightClick($event)"
+                (mousemove)="onMouseMove($event)"
+                (mouseleave)="onMouseLeave()"
+              />
+              <div
+                class="zoom-overlay"
+                *ngIf="isZooming"
+                [style.backgroundImage]="
+                  'url(' + imageBaseUrl + (selectedPhotoUrl ? selectedPhotoUrl : event.Photos?.[0]?.Url || event.photos?.[0]?.url) + ')'
+                "
+                [style.backgroundPosition]="zoomX + '% ' + zoomY + '%'"
+              ></div>
+            </div>
+  
+            <div class="d-flex gap-2 mt-3 overflow-auto thumbnail-row" *ngIf="event.Photos?.length || event.photos?.length">
+              <img
+                *ngFor="let photo of event.Photos || event.photos"
+                [src]="imageBaseUrl + (photo.Url || photo.url)"
+                (click)="selectPhoto(photo.Url || photo.url)"
+                class="rounded-lg thumbnail-img transition-opacity"
+                [ngClass]="{
+                  'border border-4 border-primary': selectedPhotoUrl === (photo.Url || photo.url)
+                }"
+                style="width: 70px; height: 70px; object-fit: cover; cursor: pointer;"
+              />
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-6">
+          <h1 class="fw-bold mb-4 text-gradient event-title">{{ event.Title || event.title }}</h1>
+          <p class="text-muted lead event-description">{{ event.Description || event.description }}</p>
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <p class="mb-0 d-flex align-items-center">
+              <i class="bi bi-tag-fill text-primary me-2 icon-size"></i>
+              <strong class="me-1 detail-label">Category:</strong>
+              <span class="badge bg-primary-soft detail-badge">{{ event.CategoryName || event.categoryName }}</span>
+            </p>
+            <p class="mb-0 d-flex align-items-center">
+              <i class="bi bi-calendar-event text-primary me-2 icon-size"></i>
+              <strong class="me-1 detail-label">Date:</strong>
+              <span class="badge bg-info-soft detail-badge">{{ (event.Date || event.date) | date: 'fullDate' }}</span>
+            </p>
+            <p class="mb-0 d-flex align-items-center">
+              <i class="bi bi-geo-alt-fill text-primary me-2 icon-size"></i>
+              <strong class="me-1 detail-label">Venue:</strong>
+              <span class="badge bg-success-soft detail-badge">{{ event.Venue || event.venue }}</span>
+            </p>
+            <p class="mb-0 d-flex align-items-center">
+              <i class="bi bi-cash-stack text-primary me-2 icon-size"></i>
+              <strong class="me-1 detail-label">Price:</strong>
+              <span class="badge bg-warning-soft detail-badge">{{ (event.Price || event.price) ? ((event.Price || event.price) + ' EGP') : 'Free' }}</span>
+            </p>
+          </div>
+  
+          <ng-container *ngIf="isBooked; else bookButton">
+            <span class="badge bg-success p-2 fs-5">Booked</span>
+          </ng-container>
+          <ng-template #bookButton>
+            <button class="btn btn-primary btn-lg shadow-sm animate-pulse" (click)="bookEvent()">Book Now</button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </section>
+

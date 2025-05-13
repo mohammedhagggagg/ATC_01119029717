@@ -1,68 +1,113 @@
-.home-container {
-    font-family: Arial, sans-serif;
-  }
-  
-  .hero-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 50px 20px;
-    background-color: #ffa500;
-    color: #fff;
-    min-height: 400px;
-  }
-  
-  .hero-content {
-    max-width: 50%;
-  }
-  
-  .hero-content h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
-  }
-  
-  .hero-content p {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .options button {
-    padding: 5px 10px;
-    border: none;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .options button.active {
-    background-color: #ffa500;
-    color: #fff;
-  }
-  
-  .search-bar input {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    flex-grow: 1;
-  }
-  
-  .find-btn {
-    padding: 10px 20px;
-    background-color: #ffa500;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .hero-image img {
-    max-width: 400px;
-    height: auto;
-  }
-  
- 
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+.event-card {
+  overflow: hidden;
+  position: relative;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-image-container {
+  position: relative;
+  background: #f8f9fa;
+  width: 100%;
+  height: 200px;
+}
+
+.default-img, .hover-img {
+  transition: opacity 0.4s ease;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hover-img {
+  opacity: 0;
+}
+
+.event-card:hover .hover-img {
+  opacity: 1;
+}
+
+.event-card:hover .default-img {
+  opacity: 0;
+}
+
+.hover-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  background: rgba(206, 199, 199, 0.8);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.event-card:hover .hover-buttons {
+  opacity: 1;
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -o-transform: translateY(0);
+}
+
+.action-btn {
+  border-radius: 50%;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.action-btn:hover {
+  background-color: #0d6efd !important;
+  color: #fff;
+}
+
+.card-body .badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.9em;
+  border-radius: 20px;
+  font-weight: 500;
+  background-color: #e3f2fd; /* لون خلفية هادئ */
+  color: #0d6efd; /* أزرق هادئ */
+}
+
+.card-body .badge.title-badge {
+  background-color: #d1e7dd; /* أخضر باهت */
+  color: #0f5132;
+}
+
+.card-body .badge.date-badge {
+  background-color: #e2e3e5; /* رمادي باهت */
+  color: #495057;
+}
+
+.card-body .badge.price-badge {
+  background-color: #fff3cd; /* أصفر فاتح */
+  color: #664d03;
+}
+
+.card-body .badge.available-badge {
+  background-color: #cfe2ff; /* أزرق فاتح */
+  color: #084298;
+}
+
+
+
+.card-body .list-inline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.btn-group .btn.active {
+  background-color: #0d6efd;
+  color: white;
+}

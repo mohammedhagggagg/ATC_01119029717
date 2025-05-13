@@ -44,11 +44,11 @@ namespace EventBooking.ApI.Controllers
                 Price = e.Price,
                 //ImageUrl = e.ImageUrl,
                 CategoryId = e.CategoryId,
-                CategoryName = e.Category.Name ,
+                CategoryName = e.Category.Name,
                 Photos = e.EventPhotos.Select(ep => new EventPhotoDto
                 {
                     Id = ep.Id,
-                    Url = $"{Request.Scheme}://{Request.Host}{ep.PhotoLink}"
+                    Url = "/images/events/" + ep.PhotoLink
                 }).ToList()
             });
             return Ok(eventDtos);
@@ -97,7 +97,7 @@ namespace EventBooking.ApI.Controllers
                 Photos = e.EventPhotos.Select(ep => new
                 {
                     Id = ep.Id,
-                    Url = $"{Request.Scheme}://{Request.Host}{ep.PhotoLink}"
+                    Url = "/images/events/" + ep.PhotoLink
                 }).ToList()
             });
 
@@ -131,7 +131,7 @@ namespace EventBooking.ApI.Controllers
                 Photos = eventItem.EventPhotos.Select(ep => new EventPhotoDto
                 {
                     Id = ep.Id,
-                    Url = $"{Request.Scheme}://{Request.Host}{ep.PhotoLink}"
+                    Url = "/images/events/" + ep.PhotoLink
                 }).ToList()
             };
             return Ok(eventDto);

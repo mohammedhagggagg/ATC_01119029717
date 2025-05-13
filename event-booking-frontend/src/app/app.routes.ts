@@ -7,10 +7,12 @@ import { AuthGuard } from './guards/auth.guard';
 import { SendPinComponent } from './components/auth/send-pin/send-pin.component';
 import { EnterPinComponent } from './components/auth/enter-pin/enter-pin.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
+import { EventDetailsComponent } from './components/event-details/event-details.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path:'home', component:HomeComponent, canActivate: [AuthGuard], title:'Home Page'},
+  {path:'home', component:HomeComponent, title:'Home Page'}, 
+  { path: 'events/:id', component: EventDetailsComponent, title: 'Event Details Page' },
   {path:'register', component:RegisterComponent, title:'Register Page'},
   {path:'login', component:LoginComponent, title:'Login Page'},
   {path:'changepassword', canActivate:[AuthGuard], component:ChangePasswordComponent, title:'Change Password Page'},

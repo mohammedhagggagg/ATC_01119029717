@@ -1,0 +1,132 @@
+<section class="py-5 bg-light">
+  <div class="container">
+    <!-- Filter Section -->
+    <div class="card shadow-sm mb-3 compact-filter">
+      <!-- <div class="card-header bg-primary text-white py-2"> -->
+        <div class="card-header bg-light text-dark py-2">
+        <h5 class="mb-0">Filter Events</h5>
+      </div>
+      <div class="card-body py-2">
+        <form [formGroup]="filterForm" (ngSubmit)="onFilter()" class="row g-2">
+          <div class="col-md-2">
+            <label for="categoryId" class="form-label small mb-1">Category</label>
+            <select id="categoryId" formControlName="categoryId" class="form-select form-select-sm">
+              <option value="">All Categories</option>
+              <option value="1">Music</option>
+              <option value="2">Sports</option>
+              <option value="3">Conferences</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="minPrice" class="form-label small mb-1">Min Price</label>
+            <input type="number" id="minPrice" formControlName="minPrice" class="form-control form-control-sm" placeholder="0">
+          </div>
+          <div class="col-md-2">
+            <label for="maxPrice" class="form-label small mb-1">Max Price</label>
+            <input type="number" id="maxPrice" formControlName="maxPrice" class="form-control form-control-sm" placeholder="1000">
+          </div>
+          <div class="col-md-2">
+            <label for="startDate" class="form-label small mb-1">Start Date</label>
+            <input type="date" id="startDate" formControlName="startDate" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-2">
+            <label for="endDate" class="form-label small mb-1">End Date</label>
+            <input type="date" id="endDate" formControlName="endDate" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-1">
+            <button type="submit" class="btn btn-primary btn-sm w-100 mt-3">Apply</button>
+          </div>
+          <div class="col-md-1">
+            <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-3" (click)="filterForm.reset(); onFilter()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Events Grid -->
+    <div *ngIf="!isLoading; else loading">
+      <div *ngIf="events.length > 0; else noData">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <div class="col" *ngFor="let event of events; let i = index">
+            <div class="card h-100 shadow-sm border-0 event-card animate__animated animate__fadeInUp" [style.animation-delay]="i * 0.1 + 's'">
+             
+              <div class="card-img-top position-relative event-image-container" style="height: 200px; overflow: hidden;">
+                <img [src]="imageBaseUrl + event.photos[0].url" alt="{{ event.title }}" class="default-img img-fluid" style="object-fit: cover; width: 100%; height: 100%;" />
+                <img *ngIf="event.photos.length > 1" [src]="imageBaseUrl + event.photos[1].url" alt="{{ event.title }}" class="hover-img img-fluid" style="object-fit: cover; width: 100%; height: 100%;" />
+             
+                <div class="hover-buttons position-absolute bottom-0 start-0 end-0 d-flex justify-content-center py-2" style="background: rgba(206, 199, 199, 0.8);">
+                  <button class="btn btn-light btn-sm action-btn mx-2" (click)="viewDetails(event.id)">
+                    <i class="bi bi-eye"></i> View Details
+                  </button>
+                  <ng-container *ngIf="isBooked(event.id); else bookButton">
+                    <span class="badge bg-success p-2 mx-2">Booked</span>
+                  </ng-container>
+                  <ng-template #bookButton>
+                    <button class="btn btn-light btn-sm action-btn mx-2" (click)="bookEvent(event.id)">
+                      <i class="bi bi-calendar-check"></i> Book Now
+                    </button>
+                  </ng-template>
+                </div>
+              </div>
+              <!-- body -->
+              <div class="card-body text-center">
+                <span class="badge title-badge mb-2">{{ event.title }}</span>
+                <div class="mb-2">
+                  <span class="badge date-badge">
+                    <i class="bi bi-calendar-event"></i>
+                    {{ event.date | date: 'fullDate' }} - {{ event.date | date: 'shortTime' }}
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <span class="badge price-badge">{{ event.price ? event.price + ' EGP' : 'Free' }}</span>
+                </div>
+                <div class="mb-2">
+                  <span class="badge">{{ event.venue }}</span>
+                </div>
+                <ng-template #bookButton>
+                  <button class="btn btn-primary mt-2" (click)="bookEvent(event.id)">Book Now</button>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <div class="d-flex justify-content-center mt-4" *ngIf="totalItems > 0">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group me-2" role="group">
+            <button class="btn btn-secondary" (click)="changePage(pageIndex - 1)" [disabled]="pageIndex === 1">Previous</button>
+          </div>
+          <ng-container *ngFor="let group of pageGroups; let i = index">
+            <div class="btn-group me-2" role="group" [attr.aria-label]="'Group ' + (i + 1)">
+              <button 
+                *ngFor="let page of group" 
+                type="button" 
+                class="btn btn-secondary"
+                [class.active]="page === pageIndex"
+                (click)="changePage(page)">
+                {{ page }}
+              </button>
+            </div>
+          </ng-container>
+          <div class="btn-group me-2" role="group">
+            <button class="btn btn-secondary" (click)="changePage(pageIndex + 1)" [disabled]="pageIndex === totalPages.length">Next</button>
+          </div>
+        </div>
+      </div>
+     
+      <ng-template #noData>
+        <div class="col-12 text-center">
+          <p class="text-muted">No events found. Try adjusting your filters.</p>
+        </div>
+      </ng-template>
+    </div>
+   
+    <ng-template #loading>
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</section>
