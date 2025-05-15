@@ -13,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class HeaderComponent {
   darkMode = false;
   isLogin = false;
+  isAdmin: boolean = false;
   showDropdown = false;
   userName: string = '';
   photo: string = '';
@@ -37,9 +38,11 @@ export class HeaderComponent {
           this.isLogin = true;
           this.userName = data.displayName;
           this.photo = data.image;
+          this.isAdmin = data.role === 'Admin';
         }
         else {
           this.isLogin = false;
+          this.isAdmin = false;
         }
       }
     });

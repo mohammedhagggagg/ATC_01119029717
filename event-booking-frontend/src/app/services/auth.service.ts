@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../environments/environment.development';
+// import jwt_decode from 'jwt-decode';
+// import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +23,15 @@ export class AuthService {
    }
 
   saveUserData(response: any) {
+   const decodedToken: any = jwtDecode(response.token);
+    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    console.log('Decoded Role:', role); 
     const userData = {
       token: response.token,
       userId: response.userId,
       displayName: response.displayName,
       image: response.image,
+      role: role || 'User'
     };
 
     this._CookieService.set('userData', JSON.stringify(userData), {
