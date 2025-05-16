@@ -81,22 +81,22 @@ Built using **Angular 19** (Frontend) and **.NET 9 Web API** (Backend).
 ![Details2](./screenshots/Details2.png)
 
 ### ➕ Add Event
-![Add Event](./screenshots/Add Event.png)
+![Add Event]./screenshots/AddEvent.png)
 
 ### ✏️ Update Event
-![Update Event](./screenshots/Update Event.png)
+![Update Event](./screenshots/UpdateEvent.png)
 
 ### ❌ Delete Event
-![Delete Event](./screenshots/Delete Event.png)
+![Delete Event](./screenshots/DeleteEvent.png)
 
 ### 🛠️ Admin Panel
-![Admin Panel](./screenshots/Admin Panel.png)
+![Admin Panel](./screenshots/AdminPanel.png)
 
 ### ⚙️ API (Swagger UI)
 ![API](./screenshots/API.png)
 
 ### 🌙 Dark Mode
-![Dark Mode](./screenshots/Dark Mode.png)
+![Dark Mode](./screenshots/Darkmode.png)
 ------------------------------------
 ## 🔗 API Endpoints (Swagger UI)
 
