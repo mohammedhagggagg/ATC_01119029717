@@ -12,7 +12,7 @@ namespace EventBooking.ApI.DTOs
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         public List<IFormFile> PhotosToAdd { get; set; } 
-        public List<int> PhotoIdsToDelete { get; set; }
-      
+        public List<int>? PhotoIdsToDelete { get; set; } = new List<int>();
+
     }
 }

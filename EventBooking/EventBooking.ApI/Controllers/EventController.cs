@@ -205,6 +205,10 @@ namespace EventBooking.ApI.Controllers
           
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState)
+                {
+                    Console.WriteLine($"Field: {error.Key}, Errors: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
                 return BadRequest(ModelState);
             }
             var existingEvent = await eventRepository.GetByIdWithIncludeAsync(id: id, includeProperties: "Category,EventPhotos");
@@ -251,7 +255,7 @@ namespace EventBooking.ApI.Controllers
                 {
                     existingEvent.EventPhotos.Add(new EventPhoto
                     {
-                        PhotoLink = $"/images/events/{photoName}",
+                        PhotoLink = photoName,
                         EventId = existingEvent.Id
                     });
                 }

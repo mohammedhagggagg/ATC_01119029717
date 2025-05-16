@@ -23,9 +23,6 @@ export class HeaderComponent {
     }
   ngOnInit() {
 
-  // const theme = this._CookieService.get('theme');
-  //   this.darkMode = theme === 'dark';
-  //   this.updateBodyClass();
 
   this._AuthService.themeSubject.subscribe(theme => {
     this.darkMode = theme === 'dark';
@@ -47,16 +44,7 @@ export class HeaderComponent {
       }
     });
   }
-  // toggleDarkMode() {
-  //   this.darkMode = !this.darkMode;
-  //   document.body.classList.toggle('dark-mode', this.darkMode);
-    
-  //   const modeToggle = document.querySelector('.mode-toggle');
-  //   if (modeToggle) {
-  //     modeToggle.classList.toggle('fa-moon', !this.darkMode);
-  //     modeToggle.classList.toggle('fa-sun', this.darkMode);
-  //   }
-  // }
+
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     const newTheme = this.darkMode ? 'dark' : 'light';

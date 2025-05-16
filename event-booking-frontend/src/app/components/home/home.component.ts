@@ -7,6 +7,8 @@ import { finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -21,18 +23,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   pageSize: number = 6;
   pageIndex: number = 1;
   totalItems: number = 0;
+  isBoooked: boolean = false;
   imageBaseUrl: string = environment.baseImageURL;
   showCarousel: { [key: number]: boolean } = {};
   categorySlides: any[] = [];
   isLoading: boolean = true;
+    isLogin: boolean = false;
+  
   private eventsSubscription: Subscription | undefined;
-
+ private authSubscription!: Subscription;
   constructor(
     private router: Router,
     private eventService: EventService,
     private fb: FormBuilder,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+     private authService: AuthService
   ) {
     this.filterForm = this.fb.group({
       categoryId: [null],
@@ -45,12 +51,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadEvents();
+    this.checkAuthStatus();
     this.categorySlides = [
       [{ id: 1, name: 'Music', photo: 'music.png' }, { id: 2, name: 'Sports', photo: 'sports.png' }],
       [{ id: 3, name: 'Conferences', photo: 'conference.png' }]
     ];
   }
-
+checkAuthStatus(): void {
+    this.authSubscription = this.authService.userData.subscribe({
+      next: (user) => {
+        this.isLogin = !!user;
+      },
+      error: (err) => {
+        console.error('Auth error:', err);
+        this.isLogin = false;
+      }
+    });
+  }
   ngAfterViewInit(): void {
     const zoomContainers = this.el.nativeElement.querySelectorAll('.zoom-container');
     zoomContainers.forEach((container: HTMLElement) => {
@@ -125,13 +142,85 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  isBooked(eventId: number): boolean {
-    return false;
+checkLoginBeforeBooking(eventId: number): void {
+  if (!this.isLogin) {
+    this.showLoginAlert();
+  } else {
+    this.bookEvent(eventId);
   }
+}
 
-  bookEvent(eventId: number): void {
-    console.log('Booking event:', eventId);
-  }
+showLoginAlert(): void {
+  Swal.fire({
+    title: 'Login Required',
+    text: 'You need to login to book events',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Go to Login',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url }
+      });
+    }
+  });
+}
+isBooked(eventId: number): boolean {
+ 
+  const bookedEvents = JSON.parse(localStorage.getItem('bookedEvents') || '[]');
+  return bookedEvents.includes(eventId);
+}
+
+//  bookEvent(): void {
+//   Swal.fire({
+//       title: 'Success!',
+//       text: 'You have successfully booked the event!',
+//       icon: 'success',
+//       confirmButtonText: 'OK',
+//       confirmButtonColor: '#3085d6',
+//       timer: 2000, 
+//       timerProgressBar: true
+//     }).then((result) => {
+//       if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
+//         this.isBoooked = true; 
+//         this.router.navigate(['/home']); 
+//       }
+//     });
+   
+//   }
+
+bookEvent(eventId: number): void {
+  Swal.fire({
+    title: 'Confirm Booking',
+    text: 'Are you sure you want to book this event?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, book it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+     
+      const bookedEvents = JSON.parse(localStorage.getItem('bookedEvents') || '[]');
+      if (!bookedEvents.includes(eventId)) {
+        bookedEvents.push(eventId);
+        localStorage.setItem('bookedEvents', JSON.stringify(bookedEvents));
+      }
+
+      Swal.fire({
+        title: 'Booked!',
+        text: 'Your event has been booked.',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true
+      }).then(() => {
+      
+        this.loadEvents();
+      });
+    }
+  });
+}
 
   viewDetails(eventId: number): void {
     this.router.navigate(['/events', eventId]);

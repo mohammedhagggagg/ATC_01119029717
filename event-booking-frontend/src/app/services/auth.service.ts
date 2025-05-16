@@ -82,10 +82,12 @@ export class AuthService {
   }signout() {
     this._CookieService.delete('userData', '/');
     this._CookieService.delete('theme', '/');
+     localStorage.removeItem('bookedEvents');
     this.userData.next(null);
    this.themeSubject.next('light');
     window.location.href = '/home';
   }signup(
+    
     credentials:{
       displayName: string;
       userName: string;

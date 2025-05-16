@@ -75,27 +75,27 @@
   padding: 0.4em 0.9em;
   border-radius: 20px;
   font-weight: 500;
-  background-color: #e3f2fd; /* لون خلفية هادئ */
-  color: #0d6efd; /* أزرق هادئ */
+  background-color: #e3f2fd; 
+  color: #0d6efd;
 }
 
 .card-body .badge.title-badge {
-  background-color: #d1e7dd; /* أخضر باهت */
+  background-color: #d1e7dd; 
   color: #0f5132;
 }
 
 .card-body .badge.date-badge {
-  background-color: #e2e3e5; /* رمادي باهت */
+  background-color: #e2e3e5; 
   color: #495057;
 }
 
 .card-body .badge.price-badge {
-  background-color: #fff3cd; /* أصفر فاتح */
+  background-color: #fff3cd; 
   color: #664d03;
 }
 
 .card-body .badge.available-badge {
-  background-color: #cfe2ff; /* أزرق فاتح */
+  background-color: #cfe2ff;
   color: #084298;
 }
 
@@ -110,4 +110,54 @@
 .btn-group .btn.active {
   background-color: #0d6efd;
   color: white;
+}
+/* أنماط البطاقات المحسنة */
+.card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* أنماط الـ badges */
+.bg-primary-soft {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+}
+
+.bg-info-soft {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #17a2b8;
+}
+
+.bg-success-soft {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.bg-warning-soft {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+
+.lead {
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+.detail-label {
+  min-width: 70px;
+  display: inline-block;
 }

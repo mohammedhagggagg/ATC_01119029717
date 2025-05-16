@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-event-details',
@@ -14,69 +16,156 @@ import Swal from 'sweetalert2';
 })
 export class EventDetailsComponent {
   event: any;
+  isAdmin: boolean = false;
+  isLogin: boolean = false;
+  currentUser: any;
   loading: boolean = true;
   isBooked: boolean = false;
   eventId: number;
   imageBaseUrl: string = environment.baseImageURL;
   selectedPhotoUrl: string | null = null;
   error: string | null = null;
+   private authSubscription!: Subscription;
   isZooming: boolean = false; // Track if zoom is active
   zoomX: number = 0; // X position for zoom
   zoomY: number = 0; // Y position for zoom
   constructor(
     private route: ActivatedRoute,
      private eventService: EventService,
+      private authService: AuthService,
      private router: Router) {
     this.eventId = +this.route.snapshot.paramMap.get('id')!;
   }
 
   ngOnInit(): void {
     this.loadEventDetails();
+        this.subscribeToAuthChanges();
+         if (!this.isLogin) {
+    this.isBooked = false;}
   }
-
-  loadEventDetails(): void {
-    this.loading = true;
-    this.eventService.getEventById(this.eventId).subscribe({
+   private subscribeToAuthChanges(): void {
+    this.authSubscription = this.authService.userData.subscribe({
       next: (data) => {
-        console.log('API Response:', data);
-        this.event = data;
-        this.isBooked = this.checkIfBooked();
-        this.loading = false;
+        if (data) {
+          this.isLogin = true;
+          this.isAdmin = data.role === 'Admin';
+          this.isBooked = this.checkIfBooked(); 
+        } else {
+          this.isLogin = false;
+          this.isAdmin = false;
+           this.isBooked = false;
+        }
       },
       error: (err) => {
-        console.error('Error loading event details:', err);
-        this.error = 'Failed to load event details. Check console for details.';
-        this.loading = false;
+        console.error('Error in auth subscription:', err);
+        this.isLogin = false;
+        this.isAdmin = false;
+        this.isBooked = false;
       }
     });
+  }
+goBack(): void {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin-panel']);
+    } else {
+      this.router.navigate(['/home']);
+    }
+  }
+  goBack02(): void {
+    if (this.isAdmin) {
+      this.router.navigate(['/home']);
+    } 
   }
 
-  bookEvent(): void {
-  Swal.fire({
-      title: 'Success!',
-      text: 'You have successfully booked the event!',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#3085d6',
-      timer: 2000, // Auto-close after 2 seconds
-      timerProgressBar: true
-    }).then((result) => {
-      if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-        this.isBooked = true; // Update booked state
-        this.router.navigate(['/home']); // Navigate to home page
-      }
-    });
-   
+
+
+  loadEventDetails(): void {
+  this.loading = true;
+  this.eventService.getEventById(this.eventId).subscribe({
+    next: (data) => {
+      this.event = data;
+      this.isBooked = this.checkIfBooked();
+      this.loading = false;
+    },
+    error: (err) => {
+      this.error = 'Failed to load event details';
+      this.loading = false;
+    }
+  });
+}
+
+bookEvent(eventId: number): void {
+   if (!this.isLogin) {
+    this.requireLogin();
+    return;
   }
+  Swal.fire({
+    title: 'Confirm Booking',
+    text: 'Are you sure you want to book this event?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, book it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+     
+      const bookedEvents = JSON.parse(localStorage.getItem('bookedEvents') || '[]');
+      if (!bookedEvents.includes(eventId)) {
+        bookedEvents.push(eventId);
+        localStorage.setItem('bookedEvents', JSON.stringify(bookedEvents));
+      }
+
+      Swal.fire({
+        title: 'Booked!',
+        text: 'Your event has been booked.',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true
+      }).then(() => {
+      
+      
+        this.router.navigate(['/home']); // Navigate to home after booking
+      });
+    }
+  });
+}
  
   selectPhoto(url: string) {
     this.selectedPhotoUrl = url;
   }
-  checkIfBooked(): boolean {
-    
-    return false; 
-  }
+requireLogin(): void {
+  Swal.fire({
+    title: 'Login Required',
+    text: 'Please login to book this event',
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Login Now',
+    cancelButtonText: 'Continue Browsing'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url }
+      });
+    }
+  });
+}
+checkIfBooked(): boolean {
 
+  if (!this.isLogin) return false;
+  
+  
+  const bookedEvents = localStorage.getItem('bookedEvents');
+  if (!bookedEvents) return false;
+  
+  try {
+    const events: number[] = JSON.parse(bookedEvents);
+    return events.includes(this.eventId);
+  } catch (e) {
+    console.error('Error parsing booked events:', e);
+    return false;
+  }
+}
   // Handle right-click to toggle zoom
   onRightClick(event: MouseEvent): void {
     event.preventDefault(); // Prevent default context menu
@@ -105,5 +194,10 @@ export class EventDetailsComponent {
     const rect = img.getBoundingClientRect();
     this.zoomX = ((event.clientX - rect.left) / rect.width) * 100;
     this.zoomY = ((event.clientY - rect.top) / rect.height) * 100;
+  }
+ ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

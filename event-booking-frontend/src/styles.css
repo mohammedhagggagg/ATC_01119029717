@@ -12,7 +12,10 @@ body.dark-mode {
   body.dark-mode .nav-links a {
     color: #fff !important;
   }
-  
+  body {
+  padding-top: 50px; 
+}
+
   body.dark-mode .nav-links a.active {
     background-color: #ff6f61 !important;
     color: #f0f0f0 !important;

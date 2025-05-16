@@ -26,6 +26,7 @@ namespace EventBooking.ApI.Controllers
             var categories = await categoryRepository.GetAllAsync();
             var categoriesDtos = categories.Select(c => new CategoryDto
             {
+                Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
                 PhotoName = c.Photo != null ? $"{Request.Scheme}://{Request.Host}{c.Photo}" : null
